@@ -1,0 +1,45 @@
+name: wallpaper_app
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.1 <4.0.0"
+
+dependencies:
+  cached_network_image: ^3.3.1
+  carousel_slider: ^4.2.1
+  cloud_firestore: ^4.15.9
+  cupertino_icons: ^1.0.6
+  curved_navigation_bar: ^1.0.3
+  firebase_core: ^2.27.1
+  firebase_storage: ^11.6.10
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  random_string: ^2.3.1
+  smooth_page_indicator: ^1.1.0
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+
+          style: normal
