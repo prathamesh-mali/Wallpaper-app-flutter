@@ -19,6 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.1
+  image_picker: ^1.0.7
   random_string: ^2.3.1
   smooth_page_indicator: ^1.1.0
 
