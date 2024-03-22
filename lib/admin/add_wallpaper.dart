@@ -1,6 +1,11 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
+import 'package:wallpaper_app/service/database.dart';
 
 class AddWallpaper extends StatefulWidget {
   const AddWallpaper({super.key});
@@ -20,14 +25,41 @@ class _AddWallpaperState extends State<AddWallpaper> {
 
   String? value;
 
-  ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   File? selectedFile;
 
   Future getImage() async {
-    var image = await _picker.pickImage(source: ImageSource.gallery);
+    final image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedFile = File(image.path);
+      setState(() {});
+    } else {
+      const SnackBar(
+        content: Text("No Image selected"),
+      );
+    }
+  }
 
-    selectedFile = File(image!.path);
-    setState(() {});
+  uploadImage() async {
+    if (selectedFile != null) {
+      String addId = randomAlphaNumeric(10);
+      Reference FirebaseStorageRef =
+          FirebaseStorage.instance.ref().child("Images").child(addId);
+      final UploadTask task = FirebaseStorageRef.putFile(selectedFile!);
+
+      var downloadUrl = await (await task).ref.getDownloadURL();
+      Map<String, dynamic> addItem = {"Image": downloadUrl, "Id": addId};
+      await DatabaseMethods().addWallaper(addItem, addId, value!).then(
+            (value) => Fluttertoast.showToast(
+                msg: "Wallpaper is uploaded Successfully",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0),
+          );
+    }
   }
 
   @override
@@ -45,24 +77,58 @@ class _AddWallpaperState extends State<AddWallpaper> {
           const SizedBox(
             height: 40,
           ),
-          Center(
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 300,
-                height: 350,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
+          selectedFile == null
+              ? GestureDetector(
+                  onTap: () {
+                    getImage();
+                  },
+                  child: Center(
+                    child: Material(
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: 300,
+                        height: 350,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.camera_alt_outlined),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                )
+              : Center(
+                  child: selectedFile != null
+                      ? Material(
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            width: 300,
+                            height: 350,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.file(
+                                selectedFile!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SnackBar(
+                          content: Text("No Image Selected "),
+                        ),
                 ),
-                child: const Icon(Icons.camera_alt_outlined),
-              ),
-            ),
-          ),
           const SizedBox(
             height: 40,
           ),
@@ -75,28 +141,31 @@ class _AddWallpaperState extends State<AddWallpaper> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                items: categoriesitems
-                    .map(
-                      (items) => DropdownMenuItem<String>(
-                        value: items,
-                        child: Text(
-                          items,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: DropdownButton<String>(
+                  items: categoriesitems
+                      .map(
+                        (items) => DropdownMenuItem<String>(
+                          value: items,
+                          child: Text(
+                            items,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    this.value = value;
-                  });
-                },
-                value: value,
-                hint: const Text("Select category"),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      this.value = value;
+                    });
+                  },
+                  value: value,
+                  hint: const Text("Select category"),
+                ),
               ),
             ),
           ),
@@ -104,7 +173,9 @@ class _AddWallpaperState extends State<AddWallpaper> {
             height: 40,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              uploadImage();
+            },
             child: Container(
               padding: const EdgeInsets.only(
                   top: 15, bottom: 15, left: 60, right: 60),

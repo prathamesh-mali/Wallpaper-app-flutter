@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wallpaper_app/admin/add_wallpaper.dart';
 
 class Login extends StatefulWidget {
@@ -139,7 +136,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    LoginAdmin();
+                                    loginAdmin();
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
@@ -177,7 +174,7 @@ class _LoginState extends State<Login> {
     );
   }
 
-  LoginAdmin() {
+  loginAdmin() {
     FirebaseFirestore.instance.collection("Admin").get().then(
       (snapshot) {
         snapshot.docs.forEach(
@@ -198,7 +195,7 @@ class _LoginState extends State<Login> {
               );
             } else {
               Route route =
-                  MaterialPageRoute(builder: (context) => AddWallpaper());
+                  MaterialPageRoute(builder: (context) => const AddWallpaper());
               Navigator.push(context, route);
             }
           },

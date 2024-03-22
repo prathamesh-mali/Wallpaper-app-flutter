@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:wallpaper_app/Screens/all_wallpaper.dart';
 import 'package:wallpaper_app/Screens/categories_screen.dart';
 import 'package:wallpaper_app/Screens/home_screen.dart';
 import 'package:wallpaper_app/Screens/search_screen.dart';
@@ -25,8 +26,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
     home = const HomePage();
     searchScreen = const SearchScreen();
     categories = const Categories();
+    // allWallpapers = AllWallpapers();
     currentpage = const HomePage();
-    pages = [home, searchScreen, categories];
+
+    pages = [
+      home,
+      searchScreen,
+      categories,
+    ];
     super.initState();
   }
 
@@ -57,6 +64,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
             Icons.category,
             color: Colors.white,
           ),
+          // Icon(
+          //   Icons.all_out,
+          //   color: Colors.white,
+          // )
         ],
       ),
       body: pages[curretTabIndex],
