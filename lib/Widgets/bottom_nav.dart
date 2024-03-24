@@ -4,6 +4,8 @@ import 'package:wallpaper_app/Screens/all_wallpaper.dart';
 import 'package:wallpaper_app/Screens/categories_screen.dart';
 import 'package:wallpaper_app/Screens/home_screen.dart';
 import 'package:wallpaper_app/Screens/search_screen.dart';
+import 'package:wallpaper_app/admin/add_wallpaper.dart';
+import 'package:wallpaper_app/admin/admin_login.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -19,6 +21,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   late HomePage home;
   late SearchScreen searchScreen;
   late Categories categories;
+  late Login admin;
+  late AddWallpaper walls;
   late Widget currentpage;
 
   @override
@@ -26,14 +30,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     home = const HomePage();
     searchScreen = const SearchScreen();
     categories = const Categories();
-    // allWallpapers = AllWallpapers();
+    admin = const Login();
+    walls = const AddWallpaper();
     currentpage = const HomePage();
 
-    pages = [
-      home,
-      searchScreen,
-      categories,
-    ];
+    pages = [home, searchScreen, categories, admin];
     super.initState();
   }
 
@@ -41,7 +42,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
-        height: 65,
         buttonBackgroundColor: Colors.black,
         backgroundColor: Colors.white,
         color: const Color.fromARGB(255, 75, 75, 75),
@@ -64,10 +64,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
             Icons.category,
             color: Colors.white,
           ),
-          // Icon(
-          //   Icons.all_out,
-          //   color: Colors.white,
-          // )
+          Icon(
+            Icons.account_box_rounded,
+            color: Colors.white,
+          )
         ],
       ),
       body: pages[curretTabIndex],

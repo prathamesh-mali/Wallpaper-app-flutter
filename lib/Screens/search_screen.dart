@@ -42,6 +42,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: const Text(
           "Search",
@@ -65,6 +66,9 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             child: TextField(
               controller: searchController,
+              onSubmitted: (String value) {
+                getsearchPhoto(value);
+              },
               decoration: InputDecoration(
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,

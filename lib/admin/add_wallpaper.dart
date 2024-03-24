@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
+import 'package:wallpaper_app/Screens/home_screen.dart';
+import 'package:wallpaper_app/Widgets/bottom_nav.dart';
 import 'package:wallpaper_app/service/database.dart';
 
 class AddWallpaper extends StatefulWidget {
@@ -51,13 +53,14 @@ class _AddWallpaperState extends State<AddWallpaper> {
       Map<String, dynamic> addItem = {"Image": downloadUrl, "Id": addId};
       await DatabaseMethods().addWallaper(addItem, addId, value!).then(
             (value) => Fluttertoast.showToast(
-                msg: "Wallpaper is uploaded Successfully",
-                toastLength: Toast.LENGTH_LONG,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0),
+              msg: "Wallpaper is uploaded Successfully",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            ),
           );
     }
   }
@@ -66,9 +69,24 @@ class _AddWallpaperState extends State<AddWallpaper> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Platform.isAndroid
-            ? const Icon(Icons.arrow_back_outlined)
-            : const Icon(Icons.arrow_back_ios_new),
+        scrolledUnderElevation: 0.0,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const BottomNavBar();
+                },
+              ),
+            );
+          },
+          child: Icon(
+            Platform.isAndroid
+                ? Icons.arrow_back_outlined
+                : Icons.arrow_back_ios_new,
+          ),
+        ),
         title: const Text("Add Wallpapers"),
         centerTitle: true,
       ),
@@ -175,6 +193,7 @@ class _AddWallpaperState extends State<AddWallpaper> {
           GestureDetector(
             onTap: () {
               uploadImage();
+              selectedFile = null;
             },
             child: Container(
               padding: const EdgeInsets.only(

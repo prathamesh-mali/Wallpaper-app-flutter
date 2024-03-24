@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:wallpaper_app/Screens/full_screens.dart';
 import 'package:wallpaper_app/service/database.dart';
 
 class AllWallpapers extends StatefulWidget {
@@ -18,6 +20,7 @@ class _AllWallpapersState extends State<AllWallpapers> {
         builder: (context, AsyncSnapshot snapshot) {
           return snapshot.hasData
               ? GridView.builder(
+                  padding: const EdgeInsets.all(10),
                   itemCount: snapshot.data.docs.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       mainAxisSpacing: 7.0,
@@ -27,9 +30,21 @@ class _AllWallpapersState extends State<AllWallpapers> {
                   itemBuilder: (context, index) {
                     DocumentSnapshot ds = snapshot.data.docs[index];
                     return Container(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(ds["Image"]),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return FullScreen(imgpath: ds["Image"]);
+                            },
+                          ));
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            ds["Image"],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     );
                   },
@@ -53,6 +68,7 @@ class _AllWallpapersState extends State<AllWallpapers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         centerTitle: true,
         title: Text(
           widget.category,
@@ -64,7 +80,9 @@ class _AllWallpapersState extends State<AllWallpapers> {
       ),
       body: Column(
         children: [
-          allWallpapers(),
+          Expanded(
+            child: allWallpapers(),
+          ),
         ],
       ),
     );
